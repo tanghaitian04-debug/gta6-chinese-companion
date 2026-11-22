@@ -25,7 +25,7 @@ test('首页、资源、手机布局与中文 / 拼音搜索',async({page})=>{
   expect(errors).toEqual([])
 })
 
-test('地图底图、瓦片、缩放、点选、分类与无效分享地址',async({page})=>{
+test('地图底图、瓦片、缩放、点选、分类与无效分享地址',async({page,context},testInfo)=>{
   await visit(page,'map')
   const canvas=page.getByTestId('map-canvas')
   await expect(canvas).toBeVisible()
@@ -53,10 +53,22 @@ test('地图底图、瓦片、缩放、点选、分类与无效分享地址',asy
   const box=await canvas.boundingBox()
   expect(box).not.toBeNull()
   if(box){
-    await page.mouse.move(box.x+box.width*.16,box.y+box.height*.28)
-    await page.mouse.down()
-    await page.mouse.move(box.x+box.width*.38,box.y+box.height*.36,{steps:9})
-    await page.mouse.up()
+    const point=(fraction:number)=>({x:box.x+box.width*fraction,y:box.y+box.height*.36})
+    if(testInfo.project.name==='android'){
+      const client=await context.newCDPSession(page)
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point(.23)]})
+      for(const fraction of [.28,.34,.40,.45,.50]){
+        await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[point(fraction)]})
+      }
+      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]})
+    }else{
+      const start=point(.23)
+      const end=point(.50)
+      await page.mouse.move(start.x,start.y)
+      await page.mouse.down()
+      await page.mouse.move(end.x,end.y,{steps:9})
+      await page.mouse.up()
+    }
     await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}').lng)).not.toBe(oldPosition)
   }
   await page.getByRole('button',{name:'返回全图'}).click()
@@ -174,7 +186,7 @@ test('Android 双指可放大地图',async({page,context},testInfo)=>{
 test('V2 多类型筛选、地点字段核验、站内百科互联',async({page})=>{
   await visit(page,'map')
   await page.getByRole('button',{name:'类型：便利店与超市'}).click()
-  await page.getByRole('button',{name:'类型：维修与改装',exact:false}).click()
+  await page.getByRole('button',{name:'类型：修车与改装',exact:false}).click()
   await expect(page.getByRole('button',{name:'类型：便利店与超市'})).toHaveAttribute('aria-pressed','true')
   await page.getByRole('textbox',{name:'搜索地图地点'}).fill('24/7')
   const row=page.getByRole('button',{name:/24\/7.*Key Lento/}).first()

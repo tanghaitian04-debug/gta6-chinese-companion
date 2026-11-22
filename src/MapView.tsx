@@ -48,7 +48,14 @@ export function MapView({items,active,focus,labels,style,full,onFull,onSelect}:{
   const [missing,setMissing]=useState(false)
   const [loading,setLoading]=useState(false)
   const [zoom,setZoom]=useState(0)
+  const [online,setOnline]=useState(navigator.onLine)
   useEffect(() => { callback.current=onSelect },[onSelect])
+  useEffect(()=>{
+    const connection=()=>setOnline(navigator.onLine)
+    addEventListener('online',connection)
+    addEventListener('offline',connection)
+    return ()=>{removeEventListener('online',connection);removeEventListener('offline',connection)}
+  },[])
   useEffect(() => {
     if (!node.current) return
     const quality=rasterQuality(window.devicePixelRatio)
@@ -157,8 +164,9 @@ export function MapView({items,active,focus,labels,style,full,onFull,onSelect}:{
     const position=active?.position
     if(!instance || !position) return
     const center=toLeaflet(position.x,position.y)
-    const zoom=position.precision==='exact' ? 5 : position.radius && position.radius > 860 ? 2.2 : 4.3
-    instance.setView(center,Math.min(instance.getMaxZoom(),Math.max(instance.getZoom(),zoom)),{animate:false})
+    const desired=position.precision==='exact' ? 5 : position.radius && position.radius > 860 ? 2.2 : 4.25
+    const initialZoom=Math.min(desired,instance.getMaxZoom()-.75)
+    instance.setView(center,Math.max(instance.getZoom(),initialZoom),{animate:false})
   },[active,focus])
   return <div className={`map-stage map-style-${style}`}>
     <div className="map-canvas" ref={node} aria-label="雷奥奈达互动地图" data-testid="map-canvas" data-zoom={zoom} data-max-zoom={quality.maxZoom} />
@@ -169,7 +177,7 @@ export function MapView({items,active,focus,labels,style,full,onFull,onSelect}:{
       <button aria-label="返回全图" onClick={()=>map.current?.fitBounds(fullBounds,{padding:[32,28]})}><Crosshair size={19}/></button>
       <button aria-label={full?'退出地图全屏':'地图全屏'} onClick={onFull}>{full?<Minimize size={18}/>:<Maximize size={18}/>}</button>
     </div>
-    <div className="map-quality" role="status">{missing?'部分瓦片离线 · 显示缓存总览':loading?'正在加载原生瓦片…':zoom>=quality.maxZoom?'已达设备原生清晰度上限':'Yanis v18 · 社区地形'}</div>
+    <div className="map-quality" role="status">{!online?'离线 · 已缓存瓦片与总览':missing?'瓦片加载失败 · 显示总览':loading?'正在加载原生瓦片…':zoom>=quality.maxZoom?'已达设备原生清晰度上限':'Yanis v18 · 社区地形'}</div>
     <div className="map-credit">地图 © <a href="https://map.gtadb.org/" target="_blank" rel="noreferrer">Yanis · GTADB 社区</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></div>
   </div>
 }

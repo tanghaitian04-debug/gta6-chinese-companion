@@ -27,8 +27,8 @@ async function capture(browser,url,name,{ratio,zoom,device={},legacy=false,route
     page.on('response',response=>{if(response.url().includes('/map/tiles/')&&!response.ok())faults.push(response.status()+' '+response.url())})
     if(zoom!==undefined){
       await page.addInitScript(({zoom,legacy})=>{
-        const lat=-15332/64
-        const lng=16620/64
+        const lat=-15409/64
+        const lng=15518/64
         localStorage.setItem('leonida-companion.map.v1',JSON.stringify(legacy
           ? {lat:lat+5376/64,lng:lng-5384/64,zoom}
           : {lat,lng,zoom,grid:'gtadb-leonida'}))
