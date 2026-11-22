@@ -67,8 +67,9 @@ export function MapView({items,active,focus,labels,style,full,onFull,onSelect}:{
     map.current=instance
     const overview=L.imageOverlay(base+'map/overview.webp',mapBounds,{alt:'雷奥奈达社区地图总览',interactive:false,zIndex:1}).addTo(instance)
     overview.on('error',()=>setMissing(true))
+    // Leaflet rounds tile levels; the map itself enforces the fractional visual limit.
     const tiles=L.tileLayer(base+'map/tiles/{z}/{x}/{y}.jpg',{
-      minZoom:Math.max(0,1-quality.zoomOffset),maxZoom:quality.maxZoom,maxNativeZoom:quality.maxNativeZoom,bounds:mapBounds,
+      minZoom:Math.max(0,1-quality.zoomOffset),maxZoom:Math.ceil(quality.maxZoom),maxNativeZoom:quality.maxNativeZoom,bounds:mapBounds,
       noWrap:true,keepBuffer:1,tileSize:quality.tileSize,zoomOffset:quality.zoomOffset,zIndex:2,
       errorTileUrl:base+'map/blank.svg',
     })
