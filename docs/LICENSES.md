@@ -20,4 +20,4 @@
 
 中文正文使用编辑独立整理，保留游戏内英文名称和可查证的公开事实。PowerPyx、Push Square、GTA Base、GamesRadar+ 和 PC Gamer 发布的攻略、图片、数据库与品牌归各自权利人。各条目的具体来源在详情和数据文件中。
 
-依赖保留各自许可。React、Fuse.js、Lucide、Zod、Vite 等依赖随其发布包附带许可，Leaflet 为 BSD-2-Clause，Leaflet.markercluster 为 MIT。构建时在 `third-party-notices.txt` 中附带实际使用的客户端依赖许可文本。
+依赖保留各自许可。React、Fuse.js、Lucide、Zod、Vite 等依赖随其发布包附带许可，Leaflet 为 BSD-2-Clause。构建时在 `third-party-notices.txt` 中附带实际使用的客户端依赖许可文本。

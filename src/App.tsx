@@ -1,4 +1,4 @@
-import {useEffect,useMemo,useRef,useState,type CSSProperties,type FormEvent,type ReactNode} from 'react'
+import {lazy,Suspense,useEffect,useMemo,useRef,useState,type CSSProperties,type FormEvent,type ReactNode} from 'react'
 import {
   BookOpen, CarFront, Check, ChevronRight, CircleHelp, Compass, Download, ExternalLink, Eye, EyeOff,
   Flag as FlagIcon, Gamepad2, House, Layers3, LibraryBig, ListFilter, Map as MapIcon, MapPin, Search,
@@ -8,9 +8,9 @@ import {byId,entries,places,records,stats} from './data/content'
 import {categories,categoryIds,categoryColors,categoryNames,confidenceIds,confidenceNames,regionIds,regionNames,type Category} from './data/categories'
 import {verified,type Entry,type Place,type RecordItem} from './data/schema'
 import {createSearch} from './search'
-import {MapView} from './MapView'
 import {addProfile,blankFlag,parseBackup,replaceProgress,resetCategory,selectProfile,toggleCheck,updateFlag,useProgress,type Flag} from './progress'
 
+const MapView=lazy(()=>import('./MapView').then(module=>({default:module.MapView})))
 const officialMedia='https://www.rockstargames.com/VI/media'
 const repo='https://github.com/tanghaitian04-debug/gta6-chinese-companion'
 const base=import.meta.env.BASE_URL
@@ -25,6 +25,7 @@ type Profile=ReturnType<typeof useProgress>['profile']
 const kindName:Record<Entry['kind'],string>={mission:'任务攻略',character:'角色',vehicle:'载具',weapon:'武器',cheat:'秘籍',completion:'100% 条件',guide:'玩法攻略'}
 const primaryPlaces=places.filter(verified)
 const search=createSearch(records.filter(verified))
+const reviewSearch=createSearch(records.filter(item=>!verified(item)))
 const mapSearch=createSearch(places)
 const mapSearchDefault=createSearch(primaryPlaces)
 
@@ -83,7 +84,8 @@ function GlobalSearch({open,spoiler,expanded,setExpanded}:{open:ItemHandler,spoi
   const [region,setRegion]=useState('')
   const [type,setType]=useState('')
   const [confidence,setConfidence]=useState('')
-  const results=query.trim()?search(query).filter(item=> (spoiler||!item.spoiler) && (!region||item.region===region) && (!type||item.kind===type) && (!confidence||item.confidence===confidence)).slice(0,16):[]
+  const source=confidence==='pending'||confidence==='disputed'?reviewSearch:search
+  const results=query.trim()?source(query).filter(item=> (spoiler||!item.spoiler) && (!region||item.region===region) && (!type||item.kind===type) && (!confidence||item.confidence===confidence)).slice(0,16):[]
   useEffect(()=>{if(expanded)ref.current?.focus()},[expanded])
   function pick(item:RecordItem){
     const q=query.trim()
@@ -215,6 +217,12 @@ function MapPage({id,initial,profile,spoiler,open,notify}:{id:string,initial:str
   const [full,setFull]=useState(false)
   const [mobileFilters,setMobileFilters]=useState(false)
   const [focus,setFocus]=useState(0)
+  useEffect(()=>{
+    if(!full)return
+    const escape=(event:KeyboardEvent)=>{if(event.key==='Escape')setFull(false)}
+    addEventListener('keydown',escape)
+    return ()=>removeEventListener('keydown',escape)
+  },[full])
   const [count,setCount]=useState(45)
   const supplied=byId.get(id)
   const active=supplied?.kind==='place'?supplied:undefined
@@ -228,7 +236,8 @@ function MapPage({id,initial,profile,spoiler,open,notify}:{id:string,initial:str
   const mapped=items.filter(item=>item.position).length
   const activeVisible=active&&(spoiler||!active.spoiler)?active:undefined
   const positionItems=items.filter(item=>item.position)
-  const next=active&&positionItems.find(item=>item.category===active.category&&item.id!==active.id&&
+  const next=active&&[...positionItems].sort((a,b)=>Number(b.region===active.region)-Number(a.region===active.region)).find(item=>
+    verified(item)&&item.category===active.category&&item.id!==active.id&&
     !(item.category==='collectibles'?profile.items[item.id]?.collected:profile.items[item.id]?.visited))
   function pick(item:RecordItem){setMobileFilters(false);open(item)}
   return <main className={`map-page ${full?'map-full':''}`}>
@@ -261,7 +270,7 @@ function MapPage({id,initial,profile,spoiler,open,notify}:{id:string,initial:str
           {items.length>count&&<button className="button secondary more" onClick={()=>setCount(count+45)}>加载更多</button>}
         </div>
       </aside>}
-      <MapView items={items} active={activeVisible} focus={focus} labels={labels} style={style} full={full} onFull={()=>{setFull(!full);setMobileFilters(false)}} onSelect={point=>{const item=byId.get(point);if(item){setFull(false);pick(item)}}}/>
+      <Suspense fallback={<div className="map-stage map-loading" role="status">加载互动地图…</div>}><MapView items={items} active={activeVisible} focus={focus} labels={labels} style={style} full={full} onFull={()=>{setFull(!full);setMobileFilters(false)}} onSelect={point=>{const item=byId.get(point);if(item){setFull(false);pick(item)}}}/></Suspense>
       {!full&&active&&<PlaceDetails item={active} flag={profile.items[active.id]??blankFlag} close={()=>{location.hash=href('map','',initial)}} focus={()=>setFocus(focus+1)} next={next} open={pick} notify={notify} spoiler={spoiler}/>}
       {id&&!active&&<p className="map-notice" role="status">此地点链接无效或已移除。</p>}
     </div>
@@ -370,7 +379,7 @@ function MyPage({profile,spoiler,setSpoiler,open,notify}:{profile:Profile,spoile
         {categoryIds.map(c=>{
           const items=primaryPlaces.filter(item=>item.category===c)
           const n=items.filter(p=>c==='collectibles'?profile.items[p.id]?.collected:profile.items[p.id]?.visited).length
-          return <div className="category-progress" key={c}><div><a href={href('map','',c)}>{categoryNames[c]}</a><span>{n}/{items.length}</span></div><progress aria-label={categoryNames[c]+'进度'} max={items.length||1} value={n}/>{n>0&&<button className="text-action" onClick={()=>setReset(c)}>重置</button>}</div>
+          return <div className="category-progress" key={c}><div><a href={href('map','',c)}>{categoryNames[c]}</a><span>{n}/{items.length}{items.length>0&&` · ${Math.round(n/items.length*100)}%`}</span></div><progress aria-label={categoryNames[c]+'进度'} max={items.length||1} value={n}/>{n>0&&<button className="text-action" onClick={()=>setReset(c)}>重置</button>}</div>
         })}
         {reset&&<div className="restore-confirm"><p>清除当前存档的「{categoryNames[reset]}」到达和收集状态？</p><button className="button secondary" onClick={()=>setReset(null)}>取消</button> <button className="button primary" onClick={()=>{resetCategory(primaryPlaces.filter(i=>i.category===reset).map(i=>i.id));setReset(null)}}>确认重置</button></div>}
       </section>

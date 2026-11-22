@@ -252,3 +252,9 @@ small,.muted{color:var(--muted)}
  .map-layout{min-height:155px}.place-detail{width:min(350px,53%);left:auto;max-height:100%;border-radius:13px}.map-layout:has(.place-detail) .map-controls{right:calc(min(350px,53%) + 7px)}.map-layout:has(.place-detail) .map-credit{left:8px;right:auto}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+.map-loading{display:grid;place-items:center;color:#eadde8;min-height:170px}
+@media(max-width:850px){
+  .map-page:not(.map-full) .map-layout:has(.place-detail) .map-canvas{
+    mask-image:linear-gradient(#000 88%,#0000)
+  }
+}

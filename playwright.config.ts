@@ -6,10 +6,10 @@ export default defineConfig({
   testDir:'tests/e2e',
   fullyParallel:true,
   workers:process.env.CI ? 2 : 3,
-  timeout:35000,
+  timeout:23000,
   expect:{timeout:8500},
   reporter:'list',
-  use:{baseURL:process.env.LIVE_URL||local,trace:'retain-on-failure'},
+  use:{baseURL:process.env.LIVE_URL||local,trace:'retain-on-failure',actionTimeout:8500,navigationTimeout:12000},
   projects:[
     {name:'desktop',use:{...devices['Desktop Chrome'],launchOptions,viewport:{width:1365,height:900}}},
     {name:'iphone',use:{...devices['iPhone 15'],defaultBrowserType:'webkit'}},

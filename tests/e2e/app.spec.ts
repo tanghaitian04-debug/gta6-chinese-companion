@@ -2,6 +2,10 @@ import {test,expect,type Page} from '@playwright/test'
 
 const visit=(page:Page,route='')=>page.goto('./#/'+route)
 
+test.beforeEach(async({page})=>{
+  page.on('pageerror',error=>console.error('Page runtime error:',error.stack||error.message))
+})
+
 test('首页、资源、手机布局与中文 / 拼音搜索',async({page})=>{
   const errors:string[]=[]
   page.on('pageerror',error=>errors.push(error.message))
@@ -35,9 +39,26 @@ test('地图底图、瓦片、缩放、点选、分类与无效分享地址',asy
   if(await close.isVisible())await close.click()
   await page.getByRole('button',{name:'地图全屏',exact:true}).click()
   await expect(page.getByRole('button',{name:'退出地图全屏'})).toBeVisible()
+  const zoom = () => page.evaluate(()=>JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}').zoom ?? -3.5)
+  const initialZoom=await zoom()
   await page.getByRole('button',{name:'放大地图'}).click()
-  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}').zoom ?? -3)).toBeGreaterThanOrEqual(0.5)
+  await expect.poll(zoom).toBeGreaterThan(initialZoom)
+  for(let steps=0;steps<3 && await zoom()<1;steps++){
+    const before=await zoom()
+    await page.getByRole('button',{name:'放大地图'}).click()
+    await expect.poll(zoom).toBeGreaterThan(before)
+  }
   await expect.poll(()=>canvas.locator('img.leaflet-tile-loaded').count()).toBeGreaterThan(0)
+  const oldPosition=await page.evaluate(()=>JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}').lng)
+  const box=await canvas.boundingBox()
+  expect(box).not.toBeNull()
+  if(box){
+    await page.mouse.move(box.x+box.width*.16,box.y+box.height*.28)
+    await page.mouse.down()
+    await page.mouse.move(box.x+box.width*.38,box.y+box.height*.36,{steps:9})
+    await page.mouse.up()
+    await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}').lng)).not.toBe(oldPosition)
+  }
   await page.getByRole('button',{name:'返回全图'}).click()
   await page.getByRole('button',{name:'退出地图全屏'}).click()
   await visit(page,'map?id=invalid-place')
@@ -109,4 +130,39 @@ test('离线重新打开基础地图与进度',async({page,context,browserName})
   await expect(page.getByRole('button',{name:'已收藏',exact:true})).toBeVisible()
   await expect.poll(()=>page.locator('img.leaflet-image-layer').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0)
   await context.setOffline(false)
+})
+
+test('地图图钉打开详情，收集品勾选和取消',async({page})=>{
+  await visit(page,'map?id=vice-city-airport')
+  await expect(page.getByTestId('place-detail')).toBeVisible()
+  await page.getByRole('button',{name:'关闭地点详情'}).click()
+  await page.getByRole('button',{name:'放大地图'}).click()
+  await page.locator('.leaflet-marker-icon[title="罪恶城国际机场"]').click()
+  await expect(page.getByTestId('place-detail').getByRole('heading',{name:'罪恶城国际机场'})).toBeVisible()
+  await visit(page,'map?id=card-aimie')
+  await page.getByRole('button',{name:'标记已收集',exact:true}).click()
+  await expect(page.getByRole('button',{name:'已收集',exact:true})).toHaveAttribute('aria-pressed','true')
+  await page.reload()
+  await page.getByRole('button',{name:'已收集',exact:true}).click()
+  await expect(page.getByRole('button',{name:'标记已收集',exact:true})).toBeVisible()
+})
+
+test('Android 双指可放大地图',async({page,context},testInfo)=>{
+  test.skip(testInfo.project.name!=='android','只有 Android 模拟器使用 Chromium 的双点触控事件')
+  await visit(page,'map')
+  await expect(page.getByTestId('map-canvas')).toBeVisible()
+  const box=await page.getByTestId('map-canvas').boundingBox()
+  expect(box).not.toBeNull()
+  if(!box)return
+  const zoom=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}').zoom ?? 0)
+  const initial=await zoom()
+  const client=await context.newCDPSession(page)
+  const x=box.x+box.width/2,y=box.y+box.height/2
+  const points=(distance:number)=>[{x:x-distance,y,id:0},{x:x+distance,y,id:1}]
+  await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:points(22)})
+  for(const distance of [28,42,58,72,89]){
+    await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:points(distance)})
+  }
+  await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]})
+  await expect.poll(zoom).toBeGreaterThan(initial)
 })
