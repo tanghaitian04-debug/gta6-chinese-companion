@@ -299,6 +299,10 @@ small,.muted{color:var(--muted)}
 .map-page:not(.map-full) .map-layout{height:calc(100dvh - 213px)}
 @media (max-width:900px){.map-page:not(.map-full) .map-layout{height:calc(100dvh - 239px - env(safe-area-inset-bottom))}}
 .map-list-only .map-filters{flex:1}
+.unlocated-list{border-top:1px solid var(--border);padding:8px 7px 12px}
+.unlocated-list .results-head{padding:6px 5px}
+.unlocated-list p{font-size:.8rem;color:var(--muted);margin:4px 5px 8px;line-height:1.6}
+.unlocated-list small{display:block;padding:4px 5px;color:var(--muted)}
 
 .map-stage .map-canvas.leaflet-container{background:#2c67a4}
 .map-list-toggle{white-space:nowrap}

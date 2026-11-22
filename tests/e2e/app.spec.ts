@@ -212,6 +212,28 @@ test('V2 多类型筛选、地点字段核验、站内百科互联',async({page}
   await expect(page.getByTestId('place-detail').getByText('坐标待核实')).toBeVisible()
 })
 
+test('V3 多分类、待定位列表、部分攻略与新增秘籍',async({page})=>{
+  await visit(page,'map')
+  if(await page.getByRole('button',{name:'筛选',exact:true}).isVisible())await page.getByRole('button',{name:'筛选',exact:true}).click()
+  await page.getByRole('button',{name:'收集品',exact:true}).click()
+  await page.getByRole('button',{name:'游戏设施',exact:true}).click()
+  await expect(page.getByRole('button',{name:'收集品',exact:true})).toHaveAttribute('aria-pressed','true')
+  await expect(page.getByRole('button',{name:'游戏设施',exact:true})).toHaveAttribute('aria-pressed','true')
+  await expect(page.getByTestId('unlocated-list')).toBeVisible()
+  await expect(page.getByText('大致区域 / 待定位')).toBeVisible()
+  await page.getByRole('checkbox',{name:'只看未完成'}).check()
+  await expect(page.getByRole('checkbox',{name:'只看未完成'})).toBeChecked()
+  await visit(page,'guide')
+  await expect(page.getByText(/主线任务总数按统计口径不同/)).toBeVisible()
+  await visit(page,'guide?id=mission-clear-skies')
+  await page.getByRole('button',{name:'显示这条攻略'}).click()
+  await expect(page.getByText('部分攻略',{exact:true})).toBeVisible()
+  await expect(page.getByText(/触发位置、完整流程与奖励尚未逐项核实/)).toBeVisible()
+  await visit(page,'cheats')
+  await expect(page.getByRole('button',{name:/攻击强化/})).toBeVisible()
+  await expect(page.getByRole('button',{name:/提升通缉等级/})).toBeVisible()
+})
+
 test('完整攻略含站内正文，章节进度刷新保留',async({page})=>{
   await visit(page,'guide?id=mission-attention')
   const reveal=page.getByRole('button',{name:'显示这条攻略'})

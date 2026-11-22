@@ -2,6 +2,7 @@ import {z} from 'zod'
 import {byId} from './content'
 import {httpsUrl,verified} from './schema'
 import rawArticles from './articles.json'
+import rawArticlesV3 from './articles-v3.json'
 
 const step=z.object({
   id:z.string().regex(/^[a-z0-9-]+$/),
@@ -31,7 +32,7 @@ const articleSchema=z.object({
 
 export type Article=z.infer<typeof articleSchema>
 export const articleStatus={complete:'完整攻略',partial:'部分攻略',reference:'站内百科'} as const
-export const articles=validateArticles(rawArticles)
+export const articles=validateArticles({...rawArticles, ...rawArticlesV3})
 
 export function validateArticles(input:unknown) {
   const data=z.record(z.string(),articleSchema).parse(input)

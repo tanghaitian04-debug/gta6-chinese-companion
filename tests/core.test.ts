@@ -46,6 +46,53 @@ describe('存档备份',()=>{
   })
 })
 
+describe('V3 多分类、秘籍与部分攻略',()=>{
+  it('秘籍只新增两条已交叉核对的方向键组合',async()=>{
+    const cheats=entries.filter(entry=>entry.kind==='cheat')
+    expect(cheats.length).toBe(10)
+    const attack=cheats.find(entry=>entry.id==='cheat-attack-force')
+    const wanted=cheats.find(entry=>entry.id==='cheat-raise-wanted')
+    expect(attack?.facts['PS5 方向键']).toBe('↓ ↑ ← ← → ↓ ↓ ↑ ↓')
+    expect(wanted?.facts['PS5 方向键']).toBe('← ↓ → ↓ ↑ → ↑')
+    expect(attack?.facts['解锁要求']).toContain('通关解锁')
+    expect(wanted?.facts['解锁要求']).toContain('50 次')
+    expect(stats.all).toBe(333)
+    expect(stats.verified).toBe(305)
+  })
+  it('14 篇缺文任务现在是部分攻略且不编造流程',async()=>{
+    const {articles}=await import('../src/data/articles')
+    const missing=['mission-clear-skies','mission-day-release','mission-swamped','mission-recalibration','mission-tourist-trap','mission-home-sweet-home','mission-discharge-time','mission-whats-in-the-bag','mission-ambulance-chaser','mission-girls-trip','mission-moses','mission-daily-driver','mission-afternoon-delight','mission-thrillbillies']
+    for(const id of missing){
+      expect(articles[id]?.quality).toBe('partial')
+      expect(articles[id]?.checkpoints.length).toBe(0)
+      expect(articles[id]?.start).toBeUndefined()
+      expect(articles[id]?.finish).toBeUndefined()
+    }
+    expect(Object.values(articles).filter(a=>a.quality==='complete').length).toBe(23)
+    expect(Object.values(articles).filter(a=>a.quality==='partial').length).toBe(16)
+  })
+  it('所有文章关联与前置任务都解析到已收录的稳定 ID',async()=>{
+    const {articles}=await import('../src/data/articles')
+    const {byId}=await import('../src/data/content')
+    for(const [id,article] of Object.entries(articles)){
+      for(const ref of [...article.related,...(article.before?[article.before]:[])]){
+        expect(byId.has(ref),`${id} → ${ref}`).toBe(true)
+      }
+    }
+    for(const item of records){
+      for(const ref of item.related){
+        expect(byId.has(ref),`${item.id} → ${ref}`).toBe(true)
+      }
+    }
+  })
+  it('无坐标地点仍可计数且不被当成精确图钉',()=>{
+    expect(stats.noPosition).toBe(145)
+    expect(stats.exact).toBe(0)
+    expect(places.filter(p=>!p.position).length).toBe(145)
+    expect(places.filter(p=>p.position?.precision==='area').length).toBe(72)
+  })
+})
+
 describe('V2 地图与文章',()=>{
   it('在三种 DPR 使用原生像素并保持网格方向',async()=>{
     const {gameToPixel,rasterQuality}=await import('../src/geometry')

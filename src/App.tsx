@@ -213,9 +213,19 @@ function PlaceDetails({item,flag,close,focus,next,open,notify,spoiler}:{item:Pla
 }
 
 function MapPage({id,initial,profile,spoiler,open,notify}:{id:string,initial:string,profile:Profile,spoiler:boolean,open:ItemHandler,notify:(s:string)=>void}) {
-  const [savedCategory,saveCategory]=usePreference('map-category','')
-  const [category,setCategoryValue]=useState(categoryIds.includes(initial as Category)?initial:savedCategory)
-  const setCategory=(value:string)=>{setCategoryValue(value);saveCategory(value)}
+  const [savedCategories,saveCategories]=usePreference<string[]>('map-categories',[])
+  const [categoriesSel,setCategoriesSel]=useState<string[]>(()=>{
+    if(categoryIds.includes(initial as Category))return [initial]
+    const legacy=readPref<string>('map-category','')
+    if(legacy&&categoryIds.includes(legacy as Category))return [legacy]
+    return savedCategories.filter(c=>categoryIds.includes(c as Category))
+  })
+  const setCategories=(next:string[])=>{setCategoriesSel(next);saveCategories(next)}
+  const toggleCategory=(value:string)=>{
+    setCategories(categoriesSel.includes(value)?categoriesSel.filter(c=>c!==value):[...categoriesSel,value])
+    setSub('');setTypes([]);setCount(45)
+  }
+  const clearCategories=()=>{setCategories([]);setSub('');setTypes([]);setCount(45)}
   const [sub,setSub]=usePreference('map-subcategory','')
   const [types,setTypes]=usePreference<PoiType[]>('map-types',[])
   const [listOnly,setListOnly]=useState(false)
@@ -242,19 +252,21 @@ function MapPage({id,initial,profile,spoiler,open,notify}:{id:string,initial:str
   const items=useMemo(()=>{
     const source=(pending?mapSearch:mapSearchDefault)(query)
     return source.filter(item=>item.kind==='place'
-      && (spoiler||!item.spoiler) && (!category||item.category===category) && (!sub||item.subcategory===sub)
+      && (spoiler||!item.spoiler) && (!categoriesSel.length||categoriesSel.includes(item.category)) && (!sub||item.subcategory===sub)
       && (!types.length||types.includes(poiType(item))) && (!locatedOnly||!!item.position)
       && (!region||item.region===region) && (!certainty||item.confidence===certainty)
       && (!onlyIncomplete||!(item.category==='collectibles'?profile.items[item.id]?.collected:profile.items[item.id]?.visited))) as Place[]
-  },[pending,query,spoiler,category,sub,types,locatedOnly,region,certainty,onlyIncomplete,profile.items])
+  },[pending,query,spoiler,categoriesSel,sub,types,locatedOnly,region,certainty,onlyIncomplete,profile.items])
   const available=(pending?places:primaryPlaces).filter(item=>item.position&&(spoiler||!item.spoiler))
   const toggleType=(type:PoiType)=>{
     setTypes(types.includes(type)?types.filter(t=>t!==type):[...types,type])
-    setCategory('')
+    setCategories([])
     setSub('')
     setCount(45)
   }
   const mapped=items.filter(item=>item.position).length
+  const areaCount=items.filter(item=>item.position?.precision==='area').length
+  const unlocated=items.filter(item=>!item.position)
   const activeVisible=active&&(spoiler||!active.spoiler)?active:undefined
   const positionItems=items.filter(item=>item.position)
   const next=active&&[...positionItems].sort((a,b)=>Number(b.region===active.region)-Number(a.region===active.region)).find(item=>
@@ -278,10 +290,10 @@ function MapPage({id,initial,profile,spoiler,open,notify}:{id:string,initial:str
         <div className="filter-title"><h2><Layers3 size={19}/> 地图图层</h2><button className="icon-button mobile-dismiss" aria-label="关闭地图筛选" onClick={()=>{setMobileFilters(false);setListOnly(false)}}><X size={19}/></button></div>
         <div className="filter-fields">
           <div className="category-grid">
-            <button aria-pressed={!category} onClick={()=>{setCategory('');setSub('');setTypes([]);setCount(45)}}>全部</button>
-            {categoryIds.map(c=><button aria-pressed={category===c} key={c} onClick={()=>{setCategory(category===c?'':c);setSub('');setTypes([]);setCount(45)}}><i style={{background:categoryColors[c]}}/>{categoryNames[c]}</button>)}
+            <button aria-pressed={!categoriesSel.length} onClick={clearCategories}>全部</button>
+            {categoryIds.map(c=><button aria-pressed={categoriesSel.includes(c)} key={c} onClick={()=>toggleCategory(c)}><i style={{background:categoryColors[c]}}/>{categoryNames[c]}</button>)}
           </div>
-          {category&&<select aria-label="子分类" value={sub} onChange={e=>{setSub(e.target.value);setCount(45)}}><option value="">全部子分类</option>{categories[category as Category].map(s=><option key={s}>{s}</option>)}</select>}
+          {categoriesSel.length===1&&<select aria-label="子分类" value={sub} onChange={e=>{setSub(e.target.value);setCount(45)}}><option value="">全部子分类</option>{categories[categoriesSel[0] as Category].map(s=><option key={s}>{s}</option>)}</select>}
           <select aria-label="按地区筛选" value={region} onChange={e=>{setRegion(e.target.value);setCount(45)}}><option value="">所有地区</option>{regionIds.map(r=><option key={r} value={r}>{regionNames[r]}</option>)}</select>
           <select aria-label="快速定位地区" value="" onChange={e=>{const item=byId.get(e.target.value);if(item)pick(item)}}><option value="">快速定位地区</option>{regionIds.slice(0,6).map(r=><option key={r} value={r} disabled={!byId.has(r)}>{regionNames[r]}</option>)}</select>
           <select aria-label="地图底图样式" value={style} onChange={e=>setStyle(e.target.value)}><option value="terrain">社区地形</option><option value="night">夜间地形</option></select>
@@ -292,10 +304,16 @@ function MapPage({id,initial,profile,spoiler,open,notify}:{id:string,initial:str
           {pending&&<small className="muted">社区位置可能与游戏存在偏差。</small>}
           <select aria-label="地图可信度" value={certainty} onChange={e=>setCertainty(e.target.value)}><option value="">全部可信度</option>{confidenceIds.filter(c=>pending||!['pending','disputed'].includes(c)).map(c=><option value={c} key={c}>{confidenceNames[c]}</option>)}</select>
         </div>
-        <div className="results-head"><strong>地点</strong><span>{items.length} 项 · {mapped} 个可定位</span></div>
+        <div className="results-head"><strong>地点</strong><span>{items.length} 项 · {mapped} 个可定位（{areaCount} 个大致区域）· {unlocated.length} 个待定位</span></div>
         <div className="map-results">{items.length?items.slice(0,count).map(item=><Row key={item.id} item={item} open={pick} spoiler={spoiler}/>):<Empty>{query?'没有找到符合条件的地点':'暂无已核验条目'}</Empty>}
           {items.length>count&&<button className="button secondary more" onClick={()=>setCount(count+45)}>加载更多</button>}
         </div>
+        {unlocated.length>0&&<div className="unlocated-list" data-testid="unlocated-list">
+          <div className="results-head"><strong>大致区域 / 待定位</strong><span>{unlocated.length} 项</span></div>
+          <p>这些地点只有地区或城区证据，没有可核实的建筑坐标，因此不会在地图上显示为精确图钉。点开可看已有资料与来源。</p>
+          {unlocated.slice(0,20).map(item=><Row key={item.id} item={item} open={pick} spoiler={spoiler}/>)}
+          {unlocated.length>20&&<small className="muted">其余 {unlocated.length-20} 项请用上方搜索或筛选缩小范围。</small>}
+        </div>}
       </aside>}
       <Suspense fallback={<div className="map-stage map-loading" role="status">加载互动地图…</div>}><MapView items={items} active={activeVisible} focus={focus} labels={labels} style={style} full={full} onFull={()=>{setFull(!full);setMobileFilters(false)}} onSelect={point=>{const item=byId.get(point);if(item){setFull(false);pick(item)}}}/></Suspense>
       {!full&&active&&<PlaceDetails item={active} flag={profile.items[active.id]??blankFlag} close={()=>{location.hash=href('map','',initial)}} focus={()=>setFocus(focus+1)} next={next} open={pick} notify={notify} spoiler={spoiler}/>}
@@ -317,6 +335,7 @@ function ArticleBody({article,item,profile,open,spoiler}:{article:Article,item:E
   const done=article.checkpoints.filter(step=>profile.checks.includes(item.id+'-'+step.id)).length
   return <div className="article-body" data-quality={article.quality}>
     <p className="article-lede">{article.intro}</p>
+    {article.quality==='partial'&&<p className="empty">部分攻略：触发位置、完整流程与奖励尚未逐项核实，本页只写已确认的信息，不补写未核实的步骤。</p>}
     {(article.role||article.before)&&<dl className="facts"><div><dt>操作角色</dt><dd>{article.role??'待核实'}</dd></div>
       {article.before&&<div><dt>前置任务</dt><dd><a href={href('guide',article.before)}>{byId.get(article.before)?.zh}</a></dd></div>}</dl>}
     <nav className="article-toc" aria-label="文章目录">{sections.map(([id,title])=><button key={id} onClick={()=>{setLast(id);here(id)}}>{title}</button>)}
@@ -387,6 +406,7 @@ function EntryPage({page,id,initial,profile,spoiler,setSpoiler,open}:{
   </main>
   return <main className="page content-page">
     <div className="page-heading"><div><p className="eyebrow">LEONIDA COMPANION</p><h1>{title}</h1></div>{page==='guide'&&<button className="button secondary" onClick={()=>setSpoiler(!spoiler)}>{spoiler?<Eye size={17}/>:<EyeOff size={17}/>} {spoiler?'完整攻略模式':'无剧透模式'}</button>}</div>
+    {page==='guide'&&<p className="muted">主线任务总数按统计口径不同：91（esports / KeenGamer）、95（VGC）、122（GTABase，含短任务）。本站按 PowerPyx 与 GamesRadar+ 索引收录 37 条任务条目，其中完整攻略 23 篇，其余 14 篇为部分攻略。</p>}
     {page==='completion'&&<div className="panel summary-card"><ProgressRing done={done} total={required}/><div><h2>游戏完成条件核对清单</h2><p>已勾选 {done} / {required} 个已核验条件。游戏实际百分比请以游戏内统计为准。</p><p>未核实或来源冲突的条件在清单中标明，暂不计入。</p></div></div>}
     {page==='cheats'&&<div className="panel summary-card"><Gamepad2 size={26}/><p>解锁条件来自首发版公开攻略。平台按键与奖杯影响仅在证据支持时展示。</p></div>}
     {page==='library'&&<div className="tabs link-tabs"><a href={href('cheats')}><Gamepad2 size={17}/>秘籍查询</a><a href={href('completion')}><Trophy size={17}/>100% 完成度</a></div>}

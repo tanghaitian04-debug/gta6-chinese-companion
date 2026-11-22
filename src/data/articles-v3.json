@@ -1,0 +1,531 @@
+{
+  "mission-clear-skies": {
+    "quality": "partial",
+    "intro": "第一章后段的主线任务，排在「脚踏实地」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第一章，在索引中排在「脚踏实地」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-down-to-earth"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-down-to-earth"
+  },
+  "mission-day-release": {
+    "quality": "partial",
+    "intro": "第一章后段的主线任务，排在「晴空」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第一章，在索引中排在「晴空」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-clear-skies"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-clear-skies"
+  },
+  "mission-swamped": {
+    "quality": "partial",
+    "intro": "第一章后段的主线任务，排在「日间外出」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第一章，在索引中排在「日间外出」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-day-release"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-day-release"
+  },
+  "mission-recalibration": {
+    "quality": "partial",
+    "intro": "第一章后段的主线任务，排在「陷在沼泽」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第一章，在索引中排在「陷在沼泽」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-swamped"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-swamped"
+  },
+  "mission-tourist-trap": {
+    "quality": "partial",
+    "intro": "第一章后段的主线任务，排在「重新校准」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第一章，在索引中排在「重新校准」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-recalibration"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-recalibration"
+  },
+  "mission-home-sweet-home": {
+    "quality": "partial",
+    "intro": "第一章后段的主线任务，排在「游客陷阱」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第一章，在索引中排在「游客陷阱」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-tourist-trap"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-tourist-trap"
+  },
+  "mission-discharge-time": {
+    "quality": "partial",
+    "intro": "第一章收尾的主线任务，排在「温馨的家」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第一章，在索引中排在「温馨的家」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-home-sweet-home"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-home-sweet-home"
+  },
+  "mission-whats-in-the-bag": {
+    "quality": "partial",
+    "intro": "第二章开篇的主线任务，排在第一章之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第二章，在索引中排在「出院时间」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-discharge-time"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-discharge-time"
+  },
+  "mission-ambulance-chaser": {
+    "quality": "partial",
+    "intro": "第二章的主线任务，排在「包里有什么」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第二章，在索引中排在「包里有什么」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-whats-in-the-bag"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-whats-in-the-bag"
+  },
+  "mission-girls-trip": {
+    "quality": "partial",
+    "intro": "第二章的主线任务，排在「刚搬进来」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第二章，在索引中排在「刚搬进来」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-just-moved-in"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-just-moved-in"
+  },
+  "mission-moses": {
+    "quality": "partial",
+    "intro": "第二章的主线任务，排在「女孩出游」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第二章，在索引中排在「女孩出游」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-girls-trip"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-girls-trip"
+  },
+  "mission-daily-driver": {
+    "quality": "partial",
+    "intro": "第二章的主线任务，排在「摩西」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第二章，在索引中排在「摩西」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-moses"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-moses"
+  },
+  "mission-afternoon-delight": {
+    "quality": "partial",
+    "intro": "第二章的主线任务，排在「咖啡时间」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第二章，在索引中排在「咖啡时间」之后。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [
+      "mission-coffee-break"
+    ],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ],
+    "before": "mission-coffee-break"
+  },
+  "mission-thrillbillies": {
+    "quality": "partial",
+    "intro": "第二章的支线任务（待细分），在首发版索引中列为第二章条目。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "sections": [
+      {
+        "id": "confirmed",
+        "title": "已确认的信息",
+        "paragraphs": [
+          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第二章，在索引中排在第二章条目。",
+          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+        ]
+      },
+      {
+        "id": "pending",
+        "title": "尚未核实",
+        "paragraphs": [
+          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
+        ]
+      }
+    ],
+    "related": [],
+    "sources": [
+      {
+        "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+        "label": "PowerPyx 首发任务索引",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
+        "label": "GamesRadar+ 首发任务列表",
+        "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      }
+    ]
+  }
+}
