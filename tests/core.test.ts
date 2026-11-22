@@ -29,6 +29,11 @@ describe('公开目录',()=>{
       expect(lookup(query).some(item=>item.id==='vice-city-airport')).toBe(true)
     }
   })
+  it('无剧透模式下任务仍能按名称搜到',()=>{
+    const lookup=createSearch(entries)
+    expect(lookup('不速之客').some(item=>item.id==='mission-attention')).toBe(true)
+    expect(lookup('晴空').some(item=>item.id==='mission-clear-skies')).toBe(true)
+  })
   it('可往返转换地图像素和 Leaflet 坐标',()=>{
     expect(toLeaflet(320,640)).toEqual([-10,5])
     expect(toPixel(...toLeaflet(3622.25,5890))).toEqual([3622.25,5890])

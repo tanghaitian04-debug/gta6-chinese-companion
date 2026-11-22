@@ -123,7 +123,8 @@ test('完整备份、无效文件和恢复确认',async({page})=>{
 
 test('无剧透模式、资料库、秘籍和单独的完成条件',async({page})=>{
   await visit(page,'guide?id=mission-gone-fishing')
-  await expect(page.getByRole('heading',{name:'剧透条目'})).toBeVisible()
+  await expect(page.getByRole('heading',{name:'出海钓鱼'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'显示这条攻略'})).toBeVisible()
   await page.getByRole('button',{name:'显示这条攻略'}).click()
   await expect(page.getByRole('heading',{name:/出海/})).toBeVisible()
   await page.getByRole('checkbox',{name:'完成步骤 1'}).check()
@@ -232,6 +233,27 @@ test('V3 多分类、待定位列表、部分攻略与新增秘籍',async({page}
   await visit(page,'cheats')
   await expect(page.getByRole('button',{name:/攻击强化/})).toBeVisible()
   await expect(page.getByRole('button',{name:/提升通缉等级/})).toBeVisible()
+})
+
+test('V4 无剧透仍可按任务名找攻略、地图直达与空分类不占位',async({page})=>{
+  await visit(page,'guide')
+  await expect(page.getByRole('button',{name:/不速之客/}).first()).toBeVisible()
+  await page.getByRole('button',{name:'打开全站搜索'}).click()
+  await page.getByRole('textbox',{name:'全站关键词'}).fill('不速之客')
+  await expect(page.getByRole('button',{name:/不速之客/}).first()).toBeVisible()
+  await page.keyboard.press('Escape')
+  await visit(page,'map')
+  await expect(page.getByRole('button',{name:'类型：警察局'})).toHaveCount(0)
+  await expect(page.getByRole('button',{name:'类型：医院'})).toHaveCount(0)
+  await page.getByRole('button',{name:'罪恶城',exact:true}).click()
+  await expect(page.getByTestId('place-detail').getByRole('heading',{name:'罪恶城'})).toBeVisible()
+  await visit(page,'me')
+  await expect(page.getByRole('progressbar',{name:'任务地点进度'})).toHaveCount(0)
+  await expect(page.getByText(/暂无已核验地点/)).toBeVisible()
+  await visit(page,'guide?id=mission-clear-skies')
+  await page.getByRole('button',{name:'显示这条攻略'}).click()
+  await expect(page.getByRole('heading',{name:'已核对的任务目标顺序'})).toBeVisible()
+  await expect(page.locator('.article-body p',{hasText:'南风镇'}).first()).toBeVisible()
 })
 
 test('完整攻略含站内正文，章节进度刷新保留',async({page})=>{

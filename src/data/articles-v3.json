@@ -1,21 +1,22 @@
 {
   "mission-clear-skies": {
     "quality": "partial",
-    "intro": "第一章后段的主线任务，排在「脚踏实地」之后。名称与章节来自首发版任务索引，分步流程尚未逐项核实。",
+    "intro": "第一章后段的主线任务，排在「脚踏实地」之后。PowerPyx 与 VGC 的流程攻略已核对目标顺序：下午在南风镇上水上飞机，护送皮特到沼泽跑道，交易出事后救出唐尼。以下只写两家攻略共同列出的目标顺序，详细操作与失败条件仍待核实。",
     "sections": [
       {
         "id": "confirmed",
-        "title": "已确认的信息",
+        "title": "已核对的任务目标顺序",
         "paragraphs": [
-          "该任务出现在 PowerPyx 与 GamesRadar+ 的首发版任务索引中，章节为第一章，在索引中排在「脚踏实地」之后。",
-          "本站条目只收录了名称、章节与索引来源；触发位置、操作角色、流程与奖励尚未逐项核实。"
+          "任务在「脚踏实地」之后开始：布莱恩来电，下午到南风镇（Southwind）的水上飞机旁找唐尼，再去附近的 Tiki 酒吧见布莱恩。先把水上飞机滑进水里再起飞，飞到东南海面的拦截点，追上贴海飞行的皮特。",
+          "护送皮特到沼泽地的跑道，看着他降落；再按指示飞到下一个跑道标记处降落。降落时别撞毁飞机，撞毁会失败。",
+          "下飞机后步行跟唐尼去交易，Final Chapter 的人出现，把唐尼绑在椅子上带走。清理跑道建筑里的敌人，解开唐尼，掩护他回到飞机；再骑摩托追上在沃森湾以东等你的唐尼，上飞机触发过场。PowerPyx 标注本任务奖励为无。"
         ]
       },
       {
         "id": "pending",
         "title": "尚未核实",
         "paragraphs": [
-          "触发位置、完整流程、失败条件、奖励与是否可错过均待核实。",
+          "逐段的详细操作、敌人数量与位置、失败条件、是否可错过均待核实。",
           "请以游戏内任务提示为准；本站在核实后会把这篇部分攻略升级为完整攻略。"
         ]
       }
@@ -33,6 +34,16 @@
         "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-mission-list/",
         "label": "GamesRadar+ 首发任务列表",
         "scope": "核对任务名称、章节与在索引中的顺序；不含分步流程。"
+      },
+      {
+        "url": "https://www.powerpyx.com/gta-6-clear-skies-join-donnie-on-a-job-walkthrough/",
+        "label": "PowerPyx：Clear Skies 全流程",
+        "scope": "核对任务目标列表、开始条件与奖励；流程按其目标顺序改写。"
+      },
+      {
+        "url": "https://www.videogameschronicle.com/guide/gta-6-clear-skies-mission-walkthrough/",
+        "label": "VGC：Clear Skies 任务攻略",
+        "scope": "核对分段流程、开始条件与后续任务；与 PowerPyx 交叉核对目标顺序。"
       }
     ],
     "before": "mission-down-to-earth"
