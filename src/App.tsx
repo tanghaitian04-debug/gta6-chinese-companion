@@ -61,7 +61,6 @@ function pageFor(item:RecordItem):Route {
   if(item.kind==='completion')return 'completion'
   return 'library'
 }
-function labelFor(item:RecordItem){return item.kind==='place'?item.subcategory:kindName[item.kind]}
 function Chip({children,tone=''}:{children:ReactNode,tone?:string}){return <span className={`chip ${tone}`}>{children}</span>}
 function Badge({item}:{item:RecordItem}){return <Chip tone={verified(item)?'verified':'uncertain'}>{confidenceNames[item.confidence]}</Chip>}
 function External({url,children}:{url:string,children:ReactNode}){return <a href={url} target="_blank" rel="noreferrer">{children} <ExternalLink aria-hidden size={13}/></a>}
@@ -75,7 +74,7 @@ function Row({item,open,spoiler=false}:{item:RecordItem,open:ItemHandler,spoiler
   const color=item.kind==='place'?categoryColors[item.category]:'#caa7ff'
   return <button className="result-row" onClick={()=>open(item)}>
     <span className="row-icon" style={{'--marker-color':color} as CSSProperties}>{item.kind==='place'?<MapPin size={17}/>:<BookOpen size={17}/>}</span>
-    <span className="result-name"><strong>{hidden?'剧透条目':item.zh}</strong><small>{hidden?labelFor(item):item.en}</small></span>
+    <span className="result-name"><strong>{item.zh}</strong><small>{item.en}{hidden?' · 涉及剧透':''}</small></span>
     <ChevronRight size={16} className="row-next"/>
   </button>
 }
@@ -87,7 +86,8 @@ function GlobalSearch({open,spoiler,expanded,setExpanded}:{open:ItemHandler,spoi
   const [type,setType]=useState('')
   const [confidence,setConfidence]=useState('')
   const source=confidence==='pending'||confidence==='disputed'?reviewSearch:search
-  const results=query.trim()?source(query).filter(item=> (spoiler||!item.spoiler) && (!region||item.region===region) && (!type||item.kind===type) && (!confidence||item.confidence===confidence)).slice(0,16):[]
+  // 任务名称来自游戏内任务列表，搜得到名字；正文仍由详情页的剧透开关把关。
+  const results=query.trim()?source(query).filter(item=> (!region||item.region===region) && (!type||item.kind===type) && (!confidence||item.confidence===confidence)).slice(0,16):[]
   useEffect(()=>{if(expanded)ref.current?.focus()},[expanded])
   function pick(item:RecordItem){
     const q=query.trim()
@@ -188,7 +188,7 @@ function ShareButton({item,notify}:{item:RecordItem,notify:(s:string)=>void}) {
 function PlaceDetails({item,flag,close,focus,next,open,notify,spoiler}:{item:Place,flag:Flag,close:()=>void,focus:()=>void,next:Place|undefined,open:ItemHandler,notify:(s:string)=>void,spoiler:boolean}) {
   const hidden=item.spoiler&&!spoiler
   return <aside className="place-detail panel" aria-label="地点详情" data-testid="place-detail">
-    <div className="sheet-handle"/><div className="detail-title"><div><div className="eyebrow"><MapPin size={15}/>{item.subcategory}</div><h2>{hidden?'剧透地点':item.zh}</h2>{!hidden&&<p lang="en">{item.en}</p>}</div><button className="icon-button" onClick={close} aria-label="关闭地点详情"><X size={21}/></button></div>
+    <div className="sheet-handle"/><div className="detail-title"><div><div className="eyebrow"><MapPin size={15}/>{item.subcategory}</div><h2>{item.zh}</h2>{!hidden&&<p lang="en">{item.en}</p>}</div><button className="icon-button" onClick={close} aria-label="关闭地点详情"><X size={21}/></button></div>
     <div className="detail-scroll">
       <div className="chips"><Badge item={item}/><Chip>{item.position?.precision==='exact'?'精确坐标':item.position?'大致区域':'坐标待核实'}</Chip></div>
       {hidden?<Empty>在「我的」关闭无剧透模式后可以查看详情。</Empty>:<>
@@ -282,8 +282,12 @@ function MapPage({id,initial,profile,spoiler,open,notify}:{id:string,initial:str
       <External url={officialMedia}>官方地图</External>
     </div>}
     {!full&&<div className="poi-toolbar" aria-label="快速地点类型">
-      {quickTypes.map(type=><button key={type} className="poi-filter" aria-label={'类型：'+poiTypes[type].label} aria-pressed={types.includes(type)} onClick={()=>toggleType(type)} style={{'--poi':poiTypes[type].color} as CSSProperties}><span dangerouslySetInnerHTML={{__html:poiIcon(type)}}/>{poiTypes[type].label} <small>{available.filter(p=>poiType(p)===type).length}</small></button>)}
+      {quickTypes.filter(type=>available.some(p=>poiType(p)===type)).map(type=><button key={type} className="poi-filter" aria-label={'类型：'+poiTypes[type].label} aria-pressed={types.includes(type)} onClick={()=>toggleType(type)} style={{'--poi':poiTypes[type].color} as CSSProperties}><span dangerouslySetInnerHTML={{__html:poiIcon(type)}}/>{poiTypes[type].label} <small>{available.filter(p=>poiType(p)===type).length}</small></button>)}
       {types.length>0&&<button className="poi-filter" onClick={()=>setTypes([])}>清除类型</button>}
+    </div>}
+    {!full&&<div className="region-jump" aria-label="快速定位地区">
+      <span className="muted">直达</span>
+      {regionIds.slice(0,6).map(r=>{const place=byId.get(r);return place&&<button key={r} className="region-jump-button" onClick={()=>pick(place)}><MapPin size={15}/>{regionNames[r]}</button>})}
     </div>}
     <div className={`map-layout ${listOnly?'map-list-only':''}`}>
       {!full&&<aside className={`map-filters panel ${mobileFilters?'show-filters':''}`} aria-label="地图筛选">
@@ -369,7 +373,7 @@ function ContentDetail({item,spoiler,open,close,profile}:{item:Entry,spoiler:boo
   const checks=profile.checks
   const done=checks.includes(item.id)
   return <article className="content-detail panel reading-panel">
-    <div className="detail-title"><div><p className="eyebrow">{item.group}</p><h2>{hidden?'剧透条目':item.zh}</h2>{!hidden&&<p lang="en">{item.en}</p>}</div><button className="icon-button" onClick={close} aria-label="关闭条目详情"><X size={20}/></button></div>
+    <div className="detail-title"><div><p className="eyebrow">{item.group}</p><h2>{item.zh}</h2>{!hidden&&<p lang="en">{item.en}</p>}</div><button className="icon-button" onClick={close} aria-label="关闭条目详情"><X size={20}/></button></div>
     <div className="chips"><Badge item={item}/>{item.kind==='mission'&&<Chip>{guideStatus(item)}</Chip>}{item.spoiler&&<Chip>涉及剧透</Chip>}</div>
     {hidden?<button className="button secondary" onClick={()=>setReveal(true)}><Eye size={17}/>显示这条攻略</button>:<>
       <p className="detail-summary">{item.summary}</p>
@@ -418,11 +422,11 @@ function EntryPage({page,id,initial,profile,spoiler,setSpoiler,open}:{
     <div className={`entry-layout ${item?'with-detail':''}`}>
       {page==='library'&&<div className="tabs library-layout"><button aria-pressed={display==='list'} onClick={()=>setDisplay('list')}>列表</button><button aria-pressed={display==='cards'} onClick={()=>setDisplay('cards')}>卡片</button></div>}
       <section className={`entry-list panel ${page==='library'&&display==='cards'?'entry-cards':''}`} aria-label="资料列表">
-      {list.length?list.map((e,index)=><div className="entry-line" key={e.id}>
+      {list.length?list.map(e=><div className="entry-line" key={e.id}>
         {page==='completion'&&verified(e)&&<input type="checkbox" aria-label={e.zh+'已完成'} checked={profile.checks.includes(e.id)} onChange={()=>toggleCheck(e.id)}/>}
         <button className="entry-row" onClick={()=>open(e)}>
-          <span><strong>{e.spoiler&&!spoiler?`任务 ${index+1}（剧透）`:e.zh}</strong><small>{e.spoiler&&!spoiler?e.group:e.en+' · '+e.group}</small></span>
-          <span className="entry-status">{e.kind==='mission'?<Chip>{guideStatus(e)}</Chip>:<Badge item={e}/>}</span><ChevronRight className="row-next" size={16}/>
+          <span><strong>{e.zh}</strong><small>{e.en+' · '+e.group}</small></span>
+          <span className="entry-status">{e.spoiler&&!spoiler&&<Chip>涉及剧透</Chip>}{e.kind==='mission'?<Chip tone={guideStatus(e)==='完整攻略'?'verified':''}>{guideStatus(e)}</Chip>:<Badge item={e}/>}</span><ChevronRight className="row-next" size={16}/>
         </button>
       </div>):<Empty>{query?'没有找到符合条件的资料':'暂无已核验条目'}</Empty>}
       </section>
@@ -472,9 +476,11 @@ function MyPage({profile,spoiler,setSpoiler,open,notify}:{profile:Profile,spoile
       <section className="panel account-card"><h2>分类进度</h2><p>按本站已核验地点统计。收集品使用「已收集」，其他地点使用「已到达」。</p>
         {categoryIds.map(c=>{
           const items=primaryPlaces.filter(item=>item.category===c)
+          if(!items.length)return null
           const n=items.filter(p=>c==='collectibles'?profile.items[p.id]?.collected:profile.items[p.id]?.visited).length
           return <div className="category-progress" key={c}><div><a href={href('map','',c)}>{categoryNames[c]}</a><span>{n}/{items.length}{items.length>0&&` · ${Math.round(n/items.length*100)}%`}</span></div><progress aria-label={categoryNames[c]+'进度'} max={items.length||1} value={n}/>{n>0&&<button className="text-action" onClick={()=>setReset(c)}>重置</button>}</div>
         })}
+        {categoryIds.some(c=>!primaryPlaces.some(item=>item.category===c))&&<p className="muted">暂无已核验地点：{categoryIds.filter(c=>!primaryPlaces.some(item=>item.category===c)).map(c=>categoryNames[c]).join('、')}</p>}
         {reset&&<div className="restore-confirm"><p>清除当前存档的「{categoryNames[reset]}」到达和收集状态？</p><button className="button secondary" onClick={()=>setReset(null)}>取消</button> <button className="button primary" onClick={()=>{resetCategory(primaryPlaces.filter(i=>i.category===reset).map(i=>i.id));setReset(null)}}>确认重置</button></div>}
       </section>
     </div>

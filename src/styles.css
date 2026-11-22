@@ -296,6 +296,11 @@ small,.muted{color:var(--muted)}
 }
 
 .poi-toolbar{margin-bottom:8px}
+.region-jump{display:flex;align-items:center;gap:6px;overflow:auto;padding:0 12px 8px;scrollbar-width:thin}
+.region-jump>span{flex:none;font-size:.78rem}
+.region-jump-button{display:inline-flex;align-items:center;gap:5px;flex:none;min-height:39px;border:1px solid var(--line);border-radius:8px;background:#19182a;color:var(--text);padding:0 10px;font-size:.8rem;white-space:nowrap}
+.region-jump-button svg{color:#f2a9c5}
+@media(max-width:760px){.region-jump{padding-inline:8px}.region-jump-button{min-height:44px}}
 .map-page:not(.map-full) .map-layout{height:calc(100dvh - 213px)}
 @media (max-width:900px){.map-page:not(.map-full) .map-layout{height:calc(100dvh - 239px - env(safe-area-inset-bottom))}}
 .map-list-only .map-filters{flex:1}
