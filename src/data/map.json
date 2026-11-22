@@ -1,0 +1,8 @@
+{
+  "width": 7500, "height": 9504, "tileSize": 256, "sourceZoom": 5, "maxTileZoom": 5,
+  "fit": [620, 580, 6910, 9335], "grid": "yanis-v16-raster",
+  "revision": "7c3f8c295d64254e6b6d269b77c6f84fc4339f9c",
+  "rasterRevision": "0c7434f5bd5ed59a58aaa75a3ba7c3734fa0c4d0",
+  "crop": {"left": 2500, "top": 496, "width": 7500, "height": 9504},
+  "worldTransform": {"originX": 5500, "originY": 5504, "pixelsPerGtadbUnit": 0.5}
+}

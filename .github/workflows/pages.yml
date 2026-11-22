@@ -1,0 +1,58 @@
+name: Verify and deploy Leonida Companion
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run data
+      - run: npm test
+      - run: npm run build
+      - name: Install WebKit and browser libraries
+        run: npx playwright install --with-deps webkit
+      - name: Browser end-to-end tests
+        run: npm run test:e2e
+        env:
+          PLAYWRIGHT_CHROMIUM_PATH: /usr/bin/google-chrome
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          path: dist
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publish.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - id: publish
+        uses: actions/deploy-pages@v4
+      - name: Check published site
+        env:
+          PAGES_URL: ${{ steps.publish.outputs.page_url }}
+        run: |
+          curl --fail --retry 6 --retry-all-errors --silent --show-error "${PAGES_URL%/}/" | grep -F 'GTA 6'
+          curl --fail --retry 6 --silent --show-error -o /dev/null "${PAGES_URL%/}/map/overview.webp"
+          curl --fail --retry 6 --silent --show-error -o /dev/null "${PAGES_URL%/}/manifest.webmanifest"

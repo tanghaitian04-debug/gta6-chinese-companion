@@ -1,0 +1,11 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.env*
+public/icon-192.png
+public/icon-512.png
+public/map/.built-version
+public/map/overview.webp
+public/map/cover.webp
+public/map/tiles/

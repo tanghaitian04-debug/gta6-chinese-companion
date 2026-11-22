@@ -1,0 +1,17 @@
+name: 地点或资料勘误
+description: 报告错字、坐标偏差、版本变化或来源遗漏
+title: "[勘误] "
+body:
+  - type: input
+    id: entry
+    attributes:
+      label: 条目名称或分享链接
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 可核对的证据
+      description: 请注明平台、版本、游戏地图截图或公开视频时间戳。
+    validations:
+      required: true
