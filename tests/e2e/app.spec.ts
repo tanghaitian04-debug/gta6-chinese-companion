@@ -151,9 +151,10 @@ test('离线重新打开基础地图与进度',async({page,context})=>{
 test('地图图钉打开详情，收集品勾选和取消',async({page})=>{
   await visit(page,'map?id=vice-city-airport')
   await expect(page.getByTestId('place-detail')).toBeVisible()
+  const canvas=page.getByTestId('map-canvas')
+  await expect(canvas).toHaveAttribute('data-zoom','3')
   await page.getByRole('button',{name:'关闭地点详情'}).click()
   await page.getByRole('button',{name:'放大地图'}).click()
-  const canvas=page.getByTestId('map-canvas')
   await expect(canvas).toHaveAttribute('data-zoom','3.75')
   await expect.poll(()=>canvas.locator('img.leaflet-tile-loaded[src$=".jpg"]').count()).toBeGreaterThan(0)
   await page.locator('.leaflet-marker-icon[title="罪恶城国际机场"]').click()
