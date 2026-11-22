@@ -49,16 +49,24 @@ test('地图底图、瓦片、缩放、点选、分类与无效分享地址',asy
     await expect.poll(zoom).toBeGreaterThan(before)
   }
   await expect.poll(()=>canvas.locator('img.leaflet-tile-loaded').count()).toBeGreaterThan(0)
-  const oldPosition=await page.evaluate(()=>JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}').lng)
+  await expect(canvas).not.toHaveClass(/leaflet-zoom-anim/)
+  const center=()=>page.evaluate(()=>{
+    const {lat,lng}=JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}')
+    return [lat,lng]
+  })
+  const oldPosition=await center()
   const box=await canvas.boundingBox()
   expect(box).not.toBeNull()
   if(box){
     const point=(fraction:number)=>({x:box.x+box.width*fraction,y:box.y+box.height*.36})
     if(testInfo.project.name==='android'){
       const client=await context.newCDPSession(page)
+      const frame=()=>page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>resolve())))
       await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point(.23)]})
-      for(const fraction of [.28,.34,.40,.45,.50]){
+      await frame()
+      for(const fraction of [.28,.34,.40,.45,.50,.56]){
         await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[point(fraction)]})
+        await frame()
       }
       await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]})
     }else{
@@ -69,7 +77,7 @@ test('地图底图、瓦片、缩放、点选、分类与无效分享地址',asy
       await page.mouse.move(end.x,end.y,{steps:9})
       await page.mouse.up()
     }
-    await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('leonida-companion.map.v1')||'{}').lng)).not.toBe(oldPosition)
+    await expect.poll(center).not.toEqual(oldPosition)
   }
   await page.getByRole('button',{name:'返回全图'}).click()
   await page.getByRole('button',{name:'退出地图全屏'}).click()
@@ -207,13 +215,13 @@ test('V2 多类型筛选、地点字段核验、站内百科互联',async({page}
 test('完整攻略含站内正文，章节进度刷新保留',async({page})=>{
   await visit(page,'guide?id=mission-attention')
   const reveal=page.getByRole('button',{name:'显示这条攻略'})
-  if(await reveal.isVisible())await reveal.click()
+  await reveal.click()
   await expect(page.locator('[data-quality="complete"]')).toBeVisible()
   await expect(page.getByRole('heading',{name:/自动门|拖钩/})).toBeVisible()
   const first=page.getByRole('checkbox',{name:'完成步骤 1',exact:true})
   await first.check()
   await page.reload()
-  if(await reveal.isVisible())await reveal.click()
+  await reveal.click()
   await expect(first).toBeChecked()
   await expect(page.getByRole('button',{name:'继续上次阅读'})).toBeVisible()
   await expect(page.locator('.article-related a').first()).toHaveAttribute('href',/#\//)
