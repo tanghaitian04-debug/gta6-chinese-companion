@@ -37,22 +37,25 @@ async function capture(browser,url,name,{ratio,zoom,device={},legacy=false,route
     }
     await page.goto(url+'#/'+route,{waitUntil:'networkidle'})
     const canvas=page.getByTestId('map-canvas')
+    const tileSelector=legacy?'.leaflet-tile-loaded[src$=".webp"]':'.leaflet-tile-loaded[src$=".jpg"]'
     if(route.startsWith('map')){
       await canvas.waitFor()
       await page.locator('.leaflet-image-layer').first().waitFor()
-      if(zoom!==undefined)await page.locator('.leaflet-tile-loaded[src$=".jpg"]').first().waitFor()
+      if(zoom!==undefined)await page.locator(tileSelector).first().waitFor({state:'attached',timeout:10000})
     }
     await page.screenshot({path:output+'/'+name+'.png',animations:'disabled',timeout:12000})
     if(faults.length)throw new Error(name+': '+faults.join(', '))
     if(zoom!==undefined){
-      const sample=await canvas.evaluate(node=>{
-        const tiles=[...node.querySelectorAll('.leaflet-tile-loaded[src$=".jpg"]')].map(img=>({
+      const sample=await canvas.evaluate((node,selector)=>{
+        const tiles=[...node.querySelectorAll(selector)].map(img=>({
           width:img.naturalWidth, displayed:img.getBoundingClientRect().width,
           url:new URL(img.src).pathname,
         }))
         return {zoom:node.dataset.zoom,maxZoom:node.dataset.maxZoom,dpr:devicePixelRatio,tiles:tiles.length,
           minimumSourcePixelsPerCssPixel:Math.min(...tiles.map(t=>t.width/t.displayed)),sample:tiles[0]?.url}
-      })
+      },tileSelector)
+      if(!sample.tiles||!Number.isFinite(sample.minimumSourcePixelsPerCssPixel))throw new Error(name+': 缺少可测的原生瓦片')
+      if(legacy&&sample.minimumSourcePixelsPerCssPixel>=sample.dpr)throw new Error(name+': 旧版截图未复现过度缩放')
       if(!legacy&&sample.minimumSourcePixelsPerCssPixel<sample.dpr-.02)throw new Error(name+': 缩放超出原生像素 '+JSON.stringify(sample))
       snapshots.push({name,...sample})
     }
