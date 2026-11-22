@@ -30,7 +30,7 @@ describe('公开目录',()=>{
     }
   })
   it('可往返转换地图像素和 Leaflet 坐标',()=>{
-    expect(toLeaflet(320,640)).toEqual([-20,10])
+    expect(toLeaflet(320,640)).toEqual([-10,5])
     expect(toPixel(...toLeaflet(3622.25,5890))).toEqual([3622.25,5890])
     expect(toLeaflet(0,0)).toEqual([-0,0])
   })
@@ -43,5 +43,24 @@ describe('存档备份',()=>{
     expect(()=>parseBackup(JSON.stringify({...blankBackup,active:'missing'}))).toThrow()
     expect(()=>parseBackup(JSON.stringify({...blankBackup,profiles:[...blankBackup.profiles,...blankBackup.profiles]}))).toThrow()
     expect(()=>parseBackup(JSON.stringify({...blankBackup,profiles:[{...blankBackup.profiles[0],items:{constructor:{note:'x'}}}]}))).toThrow()
+  })
+})
+
+describe('V2 地图与文章',()=>{
+  it('在三种 DPR 使用原生像素并保持网格方向',async()=>{
+    const {gameToPixel,rasterQuality}=await import('../src/geometry')
+    expect(gameToPixel(100,200)).toEqual([16484,16184])
+    for(const ratio of [1,2,3]){
+      const raster=rasterQuality(ratio)
+      expect(256/raster.tileSize).toBeGreaterThanOrEqual(ratio)
+      expect(raster.maxZoom).toBeLessThanOrEqual(6-Math.log2(ratio))
+    }
+  })
+  it('文章数据声明完整时需要首尾和实际阶段',async()=>{
+    const {articles,validateArticles}=await import('../src/data/articles')
+    const original=articles['mission-gone-fishing']
+    expect(original.quality).toBe('complete')
+    expect(()=>validateArticles({'mission-gone-fishing':{...original,checkpoints:[]}})).toThrow('完整攻略')
+    expect(()=>validateArticles({'mission-gone-fishing':{...original,related:['missing']}})).toThrow('关联失效')
   })
 })

@@ -2,7 +2,7 @@ import {createHash} from 'node:crypto'
 import {readFileSync,readdirSync,writeFileSync} from 'node:fs'
 import {join} from 'node:path'
 const assets = readdirSync('dist/assets').map(name=>'assets/'+name)
-const files = ['index.html','icon.svg','icon-192.png','icon-512.png','manifest.webmanifest','map/cover.webp','map/overview.webp','map/blank.svg',...assets]
+const files = ['index.html','icon.svg','icon-192.png','icon-512.png','manifest.webmanifest','map/cover.webp','map/overview.webp','map/blank.svg','map/water.svg',...assets]
 const hash = createHash('sha256')
 for(const name of files) hash.update(readFileSync(join('dist',name)))
 const cache='leonida-app-'+hash.digest('hex').slice(0,18)

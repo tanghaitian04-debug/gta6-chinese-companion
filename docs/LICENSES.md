@@ -5,12 +5,11 @@
 地图制作者为 **Yanis 及 GTADB / Map GTA 社区贡献者**。许可为 [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/)。
 
 - [GTADB 源项目](https://github.com/rolux/gtadb.org)
-- [Yanis v16 原始版本](https://github.com/rolux/gtadb.org/tree/7c3f8c295d64254e6b6d269b77c6f84fc4339f9c/maps)
-- [固定版地标目录](https://github.com/rolux/gtadb.org/blob/5c1d69ff864623d181da5457afaacd00b623e1a4/map/data/6/landmarks.json)
-- [navanem / GTA6 Leonida Atlas 二次制图与授权说明](https://github.com/navanem/gta6-leonida-atlas/blob/0c7434f5bd5ed59a58aaa75a3ba7c3734fa0c4d0/THIRD_PARTY_LICENSES.md)
-- [复用的地图输入文件](https://github.com/navanem/gta6-leonida-atlas/blob/0c7434f5bd5ed59a58aaa75a3ba7c3734fa0c4d0/public/assets/gta6-leonida-atlas/basemap.webp)
+- [Yanis v18 瓦片](https://github.com/rolux/gtadb.org/tree/d406fea099e1df2bce42fd6b87eed04bce646629/maps/tiles/6/yanis%2C18)
+- [数据许可](https://github.com/rolux/gtadb.org/blob/d406fea099e1df2bce42fd6b87eed04bce646629/LICENSE-DATA)
+- [固定版地标目录](https://github.com/rolux/gtadb.org/blob/d406fea099e1df2bce42fd6b87eed04bce646629/map/data/6/landmarks.json)
 
-复用范围为 CC BY 4.0 的社区地图栅格及地标坐标事实。上游重着色并裁除了原图的图例与图像栏。本站裁切、重采样、切片、压缩、对封面做色彩调整，并添加中文 UI 标注和地图范围圈。地图界面随时显示署名。图层坐标适配、备份、搜索与 UI 源代码由本项目独立实现。
+Yanis v18 原生 JPEG 瓦片按原字节保留，仅选择本站覆盖范围并重排路径。独立总览图裁切并压缩，封面另做调色。地标数据选择英文名称和游戏坐标，增加中文标签及范围说明。页面显示作者、GTADB 和 CC BY 4.0。上游其他含官方图像的地图样式未加入发布物。
 
 ## Rockstar Games 官方资源
 

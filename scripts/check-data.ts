@@ -20,7 +20,7 @@ for(const point of places){
   const [px,py]=toPixel(lat,lng)
   if (Math.abs(px-x)>0.0001||Math.abs(py-y)>0.0001) throw new Error('坐标转换失败：'+point.id)
 }
-if(map.tileSize!==256||map.width!==map.crop.width||map.height!==map.crop.height) throw new Error('地图配置或裁切尺寸错误')
+if(map.tileSize!==256||map.maxTileZoom!==map.upstreamRanges.length||map.coverage[2]>map.width||map.coverage[3]>map.height) throw new Error('地图配置或裁切尺寸错误')
 if(!places.some(p=>p.position&&verified(p))||!entries.some(p=>p.kind==='mission'&&verified(p)))throw new Error('发布缺少已核验地图点或任务')
 const counts=Object.fromEntries([...new Set(records.map(r=>r.kind))].map(kind=>[kind,records.filter(r=>r.kind===kind).length]))
 console.log(JSON.stringify({counts,...stats,sourceUrls:new Set(records.flatMap(r=>r.sources.map(s=>s.url))).size},null,2))

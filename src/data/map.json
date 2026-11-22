@@ -1,8 +1,10 @@
 {
-  "width": 7500, "height": 9504, "tileSize": 256, "sourceZoom": 5, "maxTileZoom": 5,
-  "fit": [620, 580, 6910, 9335], "grid": "yanis-v16-raster",
-  "revision": "7c3f8c295d64254e6b6d269b77c6f84fc4339f9c",
-  "rasterRevision": "0c7434f5bd5ed59a58aaa75a3ba7c3734fa0c4d0",
-  "crop": {"left": 2500, "top": 496, "width": 7500, "height": 9504},
-  "worldTransform": {"originX": 5500, "originY": 5504, "pixelsPerGtadbUnit": 0.5}
+  "width": 32768, "height": 32768, "tileSize": 256, "sourceZoom": 6, "maxTileZoom": 6,
+  "fit": [5600, 5250, 20500, 25250],
+  "coverage": [5120, 5120, 21504, 25600],
+  "grid": "gtadb-leonida",
+  "revision": "d406fea099e1df2bce42fd6b87eed04bce646629",
+  "tileSet": "yanis,18",
+  "worldTransform": {"originX":16384,"originY":16384,"pixelsPerGtadbUnit":1},
+  "upstreamRanges": [[0,0,3,3],[1,1,6,6],[2,2,12,12],[5,5,25,24],[10,10,51,49],[21,21,103,99]]
 }

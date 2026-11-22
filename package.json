@@ -1,6 +1,6 @@
 {
   "name": "gta6-chinese-companion",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
     "test": "vitest run",
     "dev": "vite --host 0.0.0.0",
@@ -10,7 +10,8 @@
     "data": "node --import tsx scripts/check-data.ts",
     "build": "npm run prepare:map && vite build && node scripts/build-sw.mjs",
     "test:e2e": "playwright test",
-    "prepare:map": "node scripts/prepare-map.mjs"
+    "prepare:map": "node scripts/prepare-map.mjs",
+    "audit:links": "node --import tsx scripts/audit-links.ts"
   },
   "type": "module",
   "dependencies": {

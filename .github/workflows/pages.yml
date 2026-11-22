@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -23,6 +25,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run data
+      - run: npm run audit:links
       - run: npm test
       - run: npm run build
       - name: Install WebKit and browser libraries
@@ -31,6 +34,21 @@ jobs:
         run: npm run test:e2e
         env:
           PLAYWRIGHT_CHROMIUM_PATH: /usr/bin/google-chrome
+      - name: Compare V1 and V2 maps
+        env:
+          PLAYWRIGHT_CHROMIUM_PATH: /usr/bin/google-chrome
+        run: |
+          baseline="$RUNNER_TEMP/leonida-v1"
+          git worktree add --detach "$baseline" 26f82e3175253ec86be5a991902af171a4e299da
+          ln -s "$PWD/node_modules" "$baseline/node_modules"
+          (cd "$baseline" && npm run build)
+          node scripts/capture-map.mjs "$baseline"
+      - run: npm run audit:links -- --network
+      - uses: actions/upload-artifact@v4
+        with:
+          name: map-screenshots
+          path: test-results/map-evidence
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
