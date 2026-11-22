@@ -1,9 +1,10 @@
 import rawPlaces from './places.json'
 import rawFacilities from './facilities.json'
 import rawEntries from './entries.json'
+import rawCheatsV3 from './cheats-v3.json'
 import { validateContent, verified } from './schema'
 
-export const {places, entries} = validateContent([...rawPlaces,...rawFacilities], rawEntries)
+export const {places, entries} = validateContent([...rawPlaces,...rawFacilities], [...rawEntries, ...rawCheatsV3])
 export const records = [...places, ...entries]
 export const byId = new Map(records.map(item => [item.id,item]))
 export const stats = {
