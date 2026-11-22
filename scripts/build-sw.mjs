@@ -45,7 +45,8 @@ self.addEventListener('fetch', event => {
     return;
   }
   if(files.some(path => asset(path) === request.url)){
-    event.respondWith(caches.open(shell).then(cache=>cache.match(request)).then(saved=>saved||fetch(request)));
+    // These build assets are immutable and identical for same-origin requests with different Origin headers.
+    event.respondWith(caches.open(shell).then(cache=>cache.match(request,{ignoreVary:true})).then(saved=>saved||fetch(request)));
   }
 });
 `)

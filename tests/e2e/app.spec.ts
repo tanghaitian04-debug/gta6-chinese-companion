@@ -19,7 +19,7 @@ test('首页、资源、手机布局与中文 / 拼音搜索',async({page})=>{
   await field.fill('jichang')
   await page.getByRole('button',{name:/罪恶城国际机场/}).first().click()
   await expect(page.getByTestId('place-detail').getByRole('heading',{name:'罪恶城国际机场'})).toBeVisible()
-  await expect(page.getByTestId('place-detail').getByText('大致区域')).toBeVisible()
+  await expect(page.getByTestId('place-detail').getByText('大致区域',{exact:true})).toBeVisible()
   await page.reload()
   await expect(page.getByTestId('place-detail')).toBeVisible()
   expect(errors).toEqual([])
@@ -119,12 +119,16 @@ test('无剧透模式、资料库、秘籍和单独的完成条件',async({page}
   await expect(page.getByRole('checkbox').first()).toBeChecked()
 })
 
-test('离线重新打开基础地图与进度',async({page,context,browserName})=>{
-  test.skip(browserName==='webkit','Playwright WebKit 桌面宿主的离线开关与 iOS 安装行为不同，离线在 Chromium 单独验证')
+test('离线重新打开基础地图与进度',async({page,context})=>{
   await visit(page,'map?id=vice-city-airport')
   await expect(page.getByTestId('place-detail')).toBeVisible()
   await page.getByRole('button',{name:'收藏',exact:true}).click()
   await expect.poll(()=>page.evaluate(()=>Boolean(navigator.serviceWorker.controller))).toBeTruthy()
+  await expect.poll(()=>page.evaluate(async()=>{
+    const keys=await caches.keys()
+    const shell=keys.find(key=>key.startsWith('leonida-app-')&&!key.endsWith('-tiles'))
+    return shell ? (await (await caches.open(shell)).keys()).some(entry=>entry.url.endsWith('/map/overview.webp')) : false
+  })).toBeTruthy()
   await context.setOffline(true)
   await page.reload({waitUntil:'domcontentloaded'})
   await expect(page.getByRole('button',{name:'已收藏',exact:true})).toBeVisible()
