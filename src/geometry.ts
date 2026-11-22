@@ -21,6 +21,6 @@ export function rasterQuality(pixelRatio:number) {
     tileSize:config.tileSize/2**zoomOffset,
     zoomOffset,
     maxNativeZoom:config.maxTileZoom-zoomOffset,
-    maxZoom:Math.floor((config.maxTileZoom-Math.log2(ratio))*4)/4,
+    maxZoom:Math.min(config.effectiveDetailZoom,Math.floor((config.maxTileZoom-Math.log2(ratio))*4)/4),
   }
 }

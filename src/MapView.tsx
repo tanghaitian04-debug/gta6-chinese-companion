@@ -177,7 +177,7 @@ export function MapView({items,active,focus,labels,style,full,onFull,onSelect}:{
       <button aria-label="返回全图" onClick={()=>map.current?.fitBounds(fullBounds,{padding:[32,28]})}><Crosshair size={19}/></button>
       <button aria-label={full?'退出地图全屏':'地图全屏'} onClick={onFull}>{full?<Minimize size={18}/>:<Maximize size={18}/>}</button>
     </div>
-    <div className="map-quality" role="status">{!online?'离线 · 已缓存瓦片与总览':missing?'瓦片加载失败 · 显示总览':loading?'正在加载原生瓦片…':zoom>=quality.maxZoom?'已达设备原生清晰度上限':'Yanis v18 · 社区地形'}</div>
+    <div className="map-quality" role="status">{!online?'离线 · 已缓存瓦片与总览':missing?'瓦片加载失败 · 显示总览':loading&&zoom>=Math.max(0,1-quality.zoomOffset)?'正在加载原生瓦片…':zoom>=quality.maxZoom?'社区地图 · 已达有效细节上限':'Yanis v18 · 社区地形'}</div>
     <div className="map-credit">地图 © <a href="https://map.gtadb.org/" target="_blank" rel="noreferrer">Yanis · GTADB 社区</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></div>
   </div>
 }

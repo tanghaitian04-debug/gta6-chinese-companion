@@ -18,7 +18,7 @@ async function serve(directory,port){
   }
   throw new Error('Preview unavailable: '+url)
 }
-async function capture(browser,url,name,{ratio,zoom,device={},legacy=false,route='map'}={}){
+async function capture(browser,url,name,{ratio,zoom,device={},legacy=false,overscale=false,route='map'}={}){
   const context=await browser.newContext({viewport:{width:1260,height:820},deviceScaleFactor:ratio,serviceWorkers:'block',...device})
   try{
     const page=await context.newPage()
@@ -55,7 +55,7 @@ async function capture(browser,url,name,{ratio,zoom,device={},legacy=false,route
           minimumSourcePixelsPerCssPixel:Math.min(...tiles.map(t=>t.width/t.displayed)),sample:tiles[0]?.url}
       },tileSelector)
       if(!sample.tiles||!Number.isFinite(sample.minimumSourcePixelsPerCssPixel))throw new Error(name+': 缺少可测的原生瓦片')
-      if(legacy&&sample.minimumSourcePixelsPerCssPixel>=sample.dpr)throw new Error(name+': 旧版截图未复现过度缩放')
+      if(overscale&&sample.minimumSourcePixelsPerCssPixel>=sample.dpr)throw new Error(name+': 旧版截图未复现过度缩放')
       if(!legacy&&sample.minimumSourcePixelsPerCssPixel<sample.dpr-.02)throw new Error(name+': 缩放超出原生像素 '+JSON.stringify(sample))
       snapshots.push({name,...sample})
     }
@@ -69,16 +69,17 @@ try{
   opened.push(chrome)
   const safari=await webkit.launch()
   opened.push(safari)
-  await capture(chrome,oldSite,'01-v1-same-street-dpr1',{ratio:1,zoom:6,legacy:true})
-  await capture(chrome,newSite,'02-v2-same-street-dpr1',{ratio:1,zoom:6})
-  await capture(chrome,newSite,'03-v2-retina-dpr2',{ratio:2,zoom:5})
-  await capture(chrome,newSite,'04-v2-retina-dpr3',{ratio:3,zoom:4.25})
+  await capture(chrome,oldSite,'01-v1-maximum-dpr1',{ratio:1,zoom:6,legacy:true,overscale:true})
+  await capture(chrome,newSite,'02-v2-maximum-dpr1',{ratio:1,zoom:3.75})
+  await capture(chrome,newSite,'03-v2-retina-dpr2',{ratio:2,zoom:3.75})
+  await capture(chrome,newSite,'04-v2-retina-dpr3',{ratio:3,zoom:3.75})
   await capture(chrome,newSite,'05-v2-state-overview',{ratio:1})
   await capture(chrome,newSite,'06-v2-city-zoom',{ratio:1,zoom:3})
   await capture(safari,newSite,'07-v2-iphone-map',{device:devices['iPhone 15'],route:'map?id=stock-key-lento-market'})
   await capture(safari,newSite,'08-v2-iphone-landscape',{device:devices['iPhone 15 landscape'],route:'map?id=stock-key-lento-market'})
   await capture(safari,newSite,'09-v2-ipad-map',{device:devices['iPad Pro 11'],route:'map?id=vice-city-airport'})
   await capture(chrome,newSite,'10-v2-android-reading',{device:devices['Pixel 7'],route:'library?id=vehicle-ganado-personal'})
+  await capture(chrome,oldSite,'11-v1-same-scale-dpr1',{ratio:1,zoom:3.75,legacy:true})
   await writeFile(output+'/native-pixels.json',JSON.stringify(snapshots,null,2)+'\n')
 }finally{
   await Promise.all(opened.map(browser=>browser.close()))

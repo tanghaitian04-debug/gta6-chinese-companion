@@ -1,7 +1,7 @@
 {
-  "width": 32768, "height": 32768, "tileSize": 256, "sourceZoom": 6, "maxTileZoom": 6,
-  "fit": [5600, 5250, 20500, 25250],
-  "coverage": [5120, 5120, 21504, 25600],
+  "width": 32768, "height": 32768, "tileSize": 256, "sourceZoom": 6, "maxTileZoom": 6, "effectiveDetailZoom": 3.75,
+  "fit": [5600, 5250, 19960, 25250],
+  "coverage": [5120, 5120, 20224, 25600],
   "grid": "gtadb-leonida",
   "revision": "d406fea099e1df2bce42fd6b87eed04bce646629",
   "tileSet": "yanis,18",

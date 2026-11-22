@@ -299,3 +299,6 @@ small,.muted{color:var(--muted)}
 .map-page:not(.map-full) .map-layout{height:calc(100dvh - 213px)}
 @media (max-width:900px){.map-page:not(.map-full) .map-layout{height:calc(100dvh - 239px - env(safe-area-inset-bottom))}}
 .map-list-only .map-filters{flex:1}
+
+.map-stage .map-canvas.leaflet-container{background:#2c67a4}
+.map-list-toggle{white-space:nowrap}

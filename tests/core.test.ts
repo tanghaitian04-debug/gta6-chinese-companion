@@ -54,6 +54,7 @@ describe('V2 地图与文章',()=>{
       const raster=rasterQuality(ratio)
       expect(256/raster.tileSize).toBeGreaterThanOrEqual(ratio)
       expect(raster.maxZoom).toBeLessThanOrEqual(6-Math.log2(ratio))
+      expect(raster.maxZoom).toBe(3.75)
     }
   })
   it('文章数据声明完整时需要首尾和实际阶段',async()=>{
